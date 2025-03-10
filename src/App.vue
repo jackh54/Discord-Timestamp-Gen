@@ -112,7 +112,15 @@
 
       <footer class="mt-8 text-center text-gray-400 text-sm">
         <p>Built with Vue.js and Compromise NLP</p>
-        <p class="mt-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Made by pandadevv</p>
+        <div class="flex items-center justify-center gap-2 mt-2">
+          <p class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Made by pandadevv</p>
+          <a href="https://github.com/jackh54/Discord-Timestamp-Gen" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             class="text-gray-400 hover:text-white transition-all duration-300 transform hover:scale-110">
+            <i class="fab fa-github text-xl hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]"></i>
+          </a>
+        </div>
       </footer>
     </div>
   </div>
