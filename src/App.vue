@@ -20,6 +20,19 @@
                 placeholder="e.g., next Friday at 3 PM"
                 class="w-full px-4 py-2 bg-gray-700/50 border border-purple-500/20 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
+              <div class="mt-2 text-sm text-gray-400">
+                Try phrases like:
+                <div class="grid grid-cols-2 gap-2 mt-1">
+                  <button 
+                    v-for="example in examples" 
+                    :key="example"
+                    @click="useExample(example)"
+                    class="text-left text-xs px-2 py-1 rounded bg-gray-700/30 hover:bg-gray-700/50 transition-colors"
+                  >
+                    {{ example }}
+                  </button>
+                </div>
+              </div>
             </div>
             <button
               @click="generateTimestamp"
@@ -107,20 +120,32 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import nlp from 'compromise'
-import nlpDates from 'compromise-dates'
+import * as chrono from 'chrono-node'
 import { format as formatDate, fromUnixTime, getUnixTime, parse, addMinutes, addHours, addDays, addWeeks } from 'date-fns'
 import { useToast } from 'vue-toast-notification'
 import 'vue-toast-notification/dist/theme-sugar.css'
-
-// Register the dates plugin
-nlp.plugin(nlpDates)
 
 const toast = useToast()
 const naturalInput = ref('')
 const manualDate = ref('')
 const manualTime = ref('')
 const timestamp = ref(null)
+
+const examples = [
+  'next Friday at 3 PM',
+  'tomorrow at noon',
+  'in 2 hours',
+  'next week',
+  'this weekend',
+  'next month',
+  'in 30 minutes',
+  'tonight at 8'
+]
+
+function useExample(example) {
+  naturalInput.value = example
+  generateTimestamp()
+}
 
 const timestampFormats = computed(() => {
   if (!timestamp.value) return []
@@ -194,67 +219,24 @@ function generateTimestamp() {
       return
     }
 
-    if (input === 'today') {
-      const today = new Date()
-      today.setHours(12, 0, 0, 0) // Set to noon by default for "today"
-      timestamp.value = getUnixTime(today)
-      toast.success('Timestamp generated successfully!')
-      return
-    }
-
-    if (input === 'tomorrow') {
-      const tomorrow = new Date()
-      tomorrow.setDate(tomorrow.getDate() + 1)
-      tomorrow.setHours(12, 0, 0, 0)
-      timestamp.value = getUnixTime(tomorrow)
-      toast.success('Timestamp generated successfully!')
-      return
-    }
-
-    // Handle relative time expressions first
-    const relativeMatch = input.match(/^in (\d+) (minute|minutes|hour|hours|day|days|week|weeks)s?$/)
-    if (relativeMatch) {
-      const [_, amount, unit] = relativeMatch
-      const num = parseInt(amount)
-      let date = new Date()
-
-      switch(unit) {
-        case 'minute':
-        case 'minutes':
-          date = addMinutes(now, num)
-          break
-        case 'hour':
-        case 'hours':
-          date = addHours(now, num)
-          break
-        case 'day':
-        case 'days':
-          date = addDays(now, num)
-          break
-        case 'week':
-        case 'weeks':
-          date = addWeeks(now, num)
-          break
-      }
-
-      timestamp.value = getUnixTime(date)
-      toast.success('Timestamp generated successfully!')
-      return
-    }
-
-    // Try compromise NLP parsing
-    const doc = nlp(input)
-    const dates = doc.dates()
+    // Try parsing with chrono
+    const results = chrono.parse(input, now, { forwardDate: true })
     
-    if (dates.length) {
-      const date = dates.get()[0]
-      if (date && date.date) {
-        const parsedDate = new Date(date.date)
-        if (!isNaN(parsedDate.getTime())) {
-          timestamp.value = getUnixTime(parsedDate)
-          toast.success('Timestamp generated successfully!')
-          return
+    if (results.length > 0) {
+      const parsedDate = results[0].start.date()
+      if (!isNaN(parsedDate.getTime())) {
+        // For relative times like "in X minutes/hours", ensure we're using the current time
+        if (input.startsWith('in ') || input.includes('from now')) {
+          parsedDate.setSeconds(0) // Reset seconds for cleaner timestamps
         }
+        // For dates without times, set to noon by default
+        else if (results[0].start.isCertain('day') && !results[0].start.isCertain('hour')) {
+          parsedDate.setHours(12, 0, 0, 0)
+        }
+        
+        timestamp.value = getUnixTime(parsedDate)
+        toast.success('Timestamp generated successfully!')
+        return
       }
     }
 
@@ -266,7 +248,7 @@ function generateTimestamp() {
       return
     }
 
-    toast.error('Could not parse the date/time. Try using formats like "tomorrow at 3pm", "in 2 hours", or use manual input.')
+    toast.error('Could not parse the date/time. Try clicking one of the example formats below the input.')
   } catch (error) {
     console.error('Date parsing error:', error)
     toast.error('Error parsing date/time. Please try the manual input instead.')

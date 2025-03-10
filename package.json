@@ -9,17 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.4",
-    "compromise": "^14.10.0",
-    "compromise-dates": "^3.4.2",
+    "chrono-node": "^2.7.8",
     "date-fns": "^2.30.0",
+    "vue": "^3.3.4",
     "vue-toast-notification": "^3.1.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
-    "vite": "^4.4.5",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.31",
-    "tailwindcss": "^3.3.3"
+    "tailwindcss": "^3.3.3",
+    "vite": "^4.4.5"
   }
-} 
+}
