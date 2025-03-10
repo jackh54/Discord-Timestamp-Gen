@@ -2,10 +2,58 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/discord.svg" />
+    <!-- Favicon and platform-specific icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Discord Timestamp Generator</title>
-    <meta name="description" content="Generate Discord-compatible timestamps with natural language support" />
+    <meta name="description" content="Generate Discord-compatible timestamps with natural language support. Convert dates and times into Discord's timestamp format easily." />
+    <meta name="keywords" content="discord, timestamp, generator, discord timestamps, time converter, discord time format" />
+    
+    <!-- JSON-LD structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Discord Timestamp Generator",
+      "description": "Generate Discord-compatible timestamps with natural language support. Convert dates and times into Discord's timestamp format easily.",
+      "url": "https://timestamp.pandadevv.dev/",
+      "applicationCategory": "UtilityApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+    <meta name="author" content="Discord Timestamp Generator" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://timestamp.pandadevv.dev/" />
+    <meta property="og:title" content="Discord Timestamp Generator" />
+    <meta property="og:description" content="Generate Discord-compatible timestamps with natural language support. Convert dates and times into Discord's timestamp format easily." />
+    <meta property="og:image" content="https://timestamp.pandadevv.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://timestamp.pandadevv.dev/" />
+    <meta property="twitter:title" content="Discord Timestamp Generator" />
+    <meta property="twitter:description" content="Generate Discord-compatible timestamps with natural language support. Convert dates and times into Discord's timestamp format easily." />
+    <meta property="twitter:image" content="https://timestamp.pandadevv.dev/og-image.png" />
+
+    <!-- Additional SEO tags -->
+    <link rel="canonical" href="https://timestamp.pandadevv.dev/" />
+    <meta name="theme-color" content="#5865F2" />
   </head>
   <body>
     <div id="app"></div>
